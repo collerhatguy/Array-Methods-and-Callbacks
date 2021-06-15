@@ -131,10 +131,18 @@ Create a function called `getCountryWins` that takes the parameters `data` and `
 Hint: Investigate your data to find "team initials"!
 Hint: use `.reduce` */
 
-function getCountryWins(/* code here */) {
-
-    /* code here */
-
+function getCountryWins(data, teamInitials) {
+    const finals = getFinals(data);
+    const wins = finals.reduce((totalWins, game) => {
+        if (game["Home Team Initials"] === teamInitials) {
+            if (game["Home Team Goals"] > game["Away Team Goals"]) return totalWins++;
+        }
+        if (game["Away Team Initials"] === teamInitials) {
+            if (game["Away Team Goals"] > game["Home Team Goals"]) return totalWins++;
+        }
+        return totalWins;
+    }, 0)
+    return wins;
 }
 
 
@@ -142,10 +150,31 @@ function getCountryWins(/* code here */) {
 /* 💪💪💪💪💪 Stretch 2: 💪💪💪💪💪 
 Write a function called getGoals() that accepts a parameter `data` and returns the team with the most goals score per appearance (average goals for) in the World Cup finals */
 
-function getGoals(/* code here */) {
-
-    /* code here */
-
+function getGoals(data) {
+    const finals = getFinals(data);
+    const teams = finals.map(game => {
+        if (!teams.includes(game["Away Team Name"])) teams.push(game["Away Team Name"]);
+        if (!teams.includes(game["Home Team Name"])) teams.push(game["Home Team Name"]);
+    })
+    const teamsAverageGoals = teams.map(team => {
+        const goals = finals.reduce((goals, game) => {
+            if (game["Away Team Name"] === team) return goals + game["Away Team Goals"];
+            if (game["Home Team Name"] === team) return goals + game["Home Team Goals"];
+            return goals;
+        }, 0)
+        const games = finals.reduce((games, game) => {
+            if (game["Away Team Name"] === team) return games++;
+            if (game["Home Team Name"] === team) return games++;
+            return games;
+        }, 0)
+        const averageGoals = goals / games;
+        return {name: team, averageGoals: averageGoals};
+    });
+    const highestAverage = teamsAverageGoals.reduce((highest, team) => {
+        if (team.averageGoals > highest.averageGoals) return team;
+        return highest;
+    }, teamsAverageGoals[0])
+    return highestAverage;
 }
 
 
