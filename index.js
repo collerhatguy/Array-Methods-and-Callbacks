@@ -7,7 +7,7 @@ Practice accessing data by console.log-ing the following pieces of data note, yo
 
 //(a) Home Team name for 2014 world cup final
 const worldCupFinal = fifaData.filter(game => {
-    return game.Year === 2014 && game.stage === "Final";
+    return game.Year === 2014 && game.Stage === "Final";
 })[0];
 console.log(worldCupFinal['Home Team Name'])
 
@@ -34,8 +34,9 @@ Use getFinals to do the following:
 hint - you should be looking at the stage key inside of the objects
 */
 
-function getFinals(/* code here */) {
-   /* code here */
+function getFinals(data) {
+    const finalStages = data.filter(game => game.Stage === "Final");
+    return finalStages;
 }
 
 
@@ -46,8 +47,10 @@ Use the higher-order function called getYears to do the following:
 2. Receive a callback function getFinals from task 2 
 3. Return an array called years containing all of the years in the getFinals data set*/
 
-function getYears(/* code here */) {
-    /* code here */
+function getYears(data, getFinals) {
+    const finalGames = getFinals(data);
+    const finalYears = finalGames.map(game => game.Year);
+    return finalYears;
 }
 
 
@@ -59,8 +62,13 @@ Use the higher-order function getWinners to do the following:
 3. Determines the winner (home or away) of each `finals` game. 
 4. Returns the names of all winning countries in an array called `winners` */ 
 
-function getWinners(/* code here */) {
-    /* code here */
+function getWinners(data, getFinals) {
+    const finalGames = getFinals(data);
+    const finalWinners = finalGames.map(game => {
+        if (game["Home Team Goals"] > game["Away Team Goals"]) return game["Home Team Name"];
+        return game["Away Team Name"];
+    })
+    return finalWinners;
 }
 
 
